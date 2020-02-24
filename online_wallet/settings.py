@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, sys
+import mongoengine
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,14 +32,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'dashboard.apps.DashboardConfig',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dashboard.apps.DashboardConfig',
+    'corsheaders',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -83,6 +85,47 @@ DATABASES = {
     }
 }
 
+# We define 2 Mongo databases - default and test
+MONGODB_DATABASES = {
+    "default": {
+        "name": "project",
+        "host": "mongodb://localhost/wallet_db",
+        "port": 27017,
+        "tz_aware": True,  # if you use timezones in django (USE_TZ = True)
+    },
+
+    "test": {
+        "name": "test_project",
+        "host": "mongodb://localhost/wallet_db",
+        "port": 27017,
+        "tz_aware": True,  # if you use timezones in django (USE_TZ = True)
+    }
+}
+
+def is_test():
+    """
+    Checks, if we're running the server for real or in unit-test.
+    We might need a better implementation of this function.
+    """
+    if 'test' in sys.argv or 'testserver' in sys.argv:
+        print("Using a test mongo database")
+        return True
+    else:
+        print("Using a default mongo database")
+        return False
+
+if is_test():
+    db = 'test'
+else:
+    db = 'default'
+
+# establish connection with default or test database, depending on the management command, being run
+# note that this connection syntax is correct for mongoengine0.9-, but mongoengine0.10+ introduced slight changes
+mongoengine.connect(
+    db=MONGODB_DATABASES[db]['name'],
+    host=MONGODB_DATABASES[db]['host'],
+    port=MONGODB_DATABASES[db]['port']
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -123,3 +166,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
