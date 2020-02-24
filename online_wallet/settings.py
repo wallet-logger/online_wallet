@@ -89,7 +89,7 @@ DATABASES = {
 MONGODB_DATABASES = {
     "default": {
         "name": "project",
-        "host": "mongodb://localhost/wallet_db",
+        "host": "mongodb+srv://zhenghung:IjrtIlm0.@waller-db-rowrb.mongodb.net/test?retryWrites=true&w=majority",
         "port": 27017,
         "tz_aware": True,  # if you use timezones in django (USE_TZ = True)
     },
