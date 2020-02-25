@@ -92,7 +92,7 @@ db_password = os.environ["DB_PASSWORD"]
 MONGODB_DATABASES = {
     "default": {
         "name": "project",
-        "host": f"mongodb+srv://zhenghung:{db_password}.@wallet-db-rowrb.mongodb.net/test?retryWrites=true&w=majority",
+        "host": f"mongodb+srv://zhenghung:{db_password}@wallet-db-rowrb.mongodb.net/test?retryWrites=true&w=majority",
         "port": 27017,
         "tz_aware": True,  # if you use timezones in django (USE_TZ = True)
     },
