@@ -12,6 +12,15 @@ def dashboard_table(request):
     data = [DashboardTableEntry.create_entry("june", "new york", 22, "2012/02/22", "clerk", "200")]
     return HttpResponse(serializers.serialize("json", data))
 
+def retrieve_dashboard_table(request):
+    data = PaymentDocument.objects().to_json()
+    return HttpResponse(data, content_type="application/json")
+
+def retrieve_user_dashboard_table(request):
+    current_user_token = request.COOKIES['user_token']
+    data = PaymentDocument.objects(user_id=current_user_token).to_json()
+    return HttpResponse(data, content_type="application/json")
+
 @api_view(['POST'])
 @csrf_exempt
 def create_payment_entry(request):
@@ -22,3 +31,4 @@ def create_payment_entry(request):
     page.tags = ['mongodb', 'mongoengine']
     page.save()
     return HttpResponse("SUCCESSFULLY ADDED")
+
