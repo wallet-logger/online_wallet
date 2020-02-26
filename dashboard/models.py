@@ -19,7 +19,7 @@ class DashboardTableEntry(models.Model):
 class PaymentDocument(mongoengine.Document):
     payment_id = mongoengine.IntField(primary_key=True, required=True)
     user_id = mongoengine.IntField(required=True)
-    time_created = mongoengine.DateTimeField(default=datetime.datetime.utcnow)
+    time_created = mongoengine.StringField(default=str(datetime.datetime.now()))
     account = mongoengine.StringField(max_length=200, required=True)
     category = mongoengine.StringField(max_length=100, required=True)
     subcategory = mongoengine.StringField(max_length=100, default="", required=False)
